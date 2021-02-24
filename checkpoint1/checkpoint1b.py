@@ -4,7 +4,7 @@ Checkpoint 1b
 *First complete the steps in checkpoint1a.pdf
 
 Here you will create a script to preprocess the data given in starbucks.csv. You may want to use
-a jupyter notebook or python terminal to develop your code and test each function as you go... 
+a jupyter notebook or python terminal to develop your code and test each function as you go...
 you can import this file and its functions directly:
 
     - jupyter notebook: include the lines `%autoreload 2` and `import preprocess`
@@ -17,20 +17,30 @@ Once you are finished with this program, you should run `python preprocess.py` f
 This should load the data, perform preprocessing, and save the output to the data folder.
 
 """
+import pandas as pd
 
 def remove_percents(df, col):
+    df[col] = df[col].str.rstrip('%').astype('float') / 100.0
     return df
 
 def fill_zero_iron(df):
+    df['Iron (% DV)'].fillna(0, inplace = True)
     return df
     
 def fix_caffeine(df):
+    df['Caffeine (mg)'].fillna(0, inplace = True)
+    df['Caffeine (mg)'].replace(to_replace = 'Varies', value = 70, method = None, inplace = True)
     return df
 
 def standardize_names(df):
+    df.columns = df.columns.str.lower()
+    df.columns = df.columns.str.replace(r"\(.*\)","")
     return df
 
 def fix_strings(df, col):
+    df[col] = df[col].str.lower()
+    df[col] = df[col].str.replace('[^a-zA-Z]', ' ')
+    
     return df
 
 
@@ -66,8 +76,7 @@ def main():
     
     # now that the data is all clean, save your output to the `data` folder as 'starbucks_clean.csv'
     # you will use this file in checkpoint 2
-    
-    
+
 
 if __name__ == "__main__":
     main()
